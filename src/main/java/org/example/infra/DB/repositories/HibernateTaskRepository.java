@@ -94,47 +94,6 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Optional<Task> findByTitle(String title){
-        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
-        try {
-            TypedQuery<Task> query = entityManager.createQuery("select t from Task where t.title = :title", Task.class);
-
-            query.setParameter("title", title);
-
-            Task task = query.getSingleResult();
-
-            return Optional.of(task);
-        } catch (Exception e) {
-            return Optional.empty();
-
-        } finally {
-            entityManager.close();
-
-        }
-    }
-
-    @Override
-    public List<Task> findManyByUser(User user) {
-        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
-        try {
-            TypedQuery<Task> query = entityManager.createQuery("select t from Task t where t.user = :userParam", Task.class);
-
-            query.setParameter("userParam", user);
-
-            List<Task> taskList =  query.getResultList();
-
-            return taskList;
-
-        } catch (Exception e){
-            throw new RuntimeException(e);
-
-        } finally {
-
-            entityManager.close();
-        }
-    }
-
-    @Override
     public List<Task> findManyByStatusAndUser(TaskStatus status, User user) {
         EntityManager entityManager = this.entityManagerFactory.createEntityManager();
         try {

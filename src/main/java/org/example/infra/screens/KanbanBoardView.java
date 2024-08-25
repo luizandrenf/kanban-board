@@ -183,7 +183,7 @@ public class KanbanBoardView extends Application {
             newTask.setDescription(description);
             newTask.setStatus(TaskStatus.TODO);
             newTask.setUser(currentUser);
-            taskService.addTask(newTask);
+            taskService.create(newTask);
 
             titleInput.clear();
             descriptionInput.clear();

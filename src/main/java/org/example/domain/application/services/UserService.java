@@ -20,12 +20,12 @@ public class UserService {
 
     public boolean createAccount(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
-            return false; // Usuário já existe
+            return false; // User already exists
         }
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setPassword(password);
         userRepository.create(newUser);
-        return true; // Conta criada com sucesso
+        return true; // Account successful created
     }
 }

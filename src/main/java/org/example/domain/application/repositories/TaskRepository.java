@@ -12,7 +12,5 @@ public interface TaskRepository {
     void deleteById(Long id);
     void update(Task task);
     Optional<Task> findById(Long id);
-    Optional<Task> findByTitle(String title);
-    List<Task> findManyByUser(User user);
     List<Task> findManyByStatusAndUser(TaskStatus status, User user);
 }
