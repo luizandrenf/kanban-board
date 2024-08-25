@@ -74,16 +74,16 @@ public class KanbanBoardView extends Application {
         column.setPadding(new Insets(10));
         column.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5;");
 
-        // Definir as cores representativas para cada estágio
+        //
         switch (title) {
             case "To Do":
-                column.setStyle(column.getStyle() + "-fx-background-color: #f8d7da;"); // Cor para "To Do"
+                column.setStyle(column.getStyle() + "-fx-background-color: #f8d7da;"); // Color for "To Do"
                 break;
             case "Doing":
-                column.setStyle(column.getStyle() + "-fx-background-color: #fff3cd;"); // Cor para "Doing"
+                column.setStyle(column.getStyle() + "-fx-background-color: #fff3cd;"); // Color for "Doing"
                 break;
             case "Done":
-                column.setStyle(column.getStyle() + "-fx-background-color: #d4edda;"); // Cor para "Done"
+                column.setStyle(column.getStyle() + "-fx-background-color: #d4edda;"); // Color for "Done"
                 break;
         }
 
@@ -151,10 +151,10 @@ public class KanbanBoardView extends Application {
         typeComboBox.setPromptText("Select task type");
 
         // Adjust sizes
-        titleInput.setPrefWidth(400);  // Increased width
-        descriptionInput.setPrefWidth(400);  // Increased width
-        placeOrDepartmentInput.setPrefWidth(400);  // Increased width
-        typeComboBox.setPrefWidth(400);  // Increased width
+        titleInput.setPrefWidth(400);
+        descriptionInput.setPrefWidth(400);
+        placeOrDepartmentInput.setPrefWidth(400);
+        typeComboBox.setPrefWidth(400);
 
         // Button
         Button addButton = new Button("Add Task");
@@ -212,13 +212,10 @@ public class KanbanBoardView extends Application {
         VBox addTaskLayout = new VBox(15, formLayout);
         addTaskLayout.setPadding(new Insets(20));
         addTaskLayout.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: #e3f2fd; -fx-border-radius: 5; -fx-background-radius: 5;");
-        addTaskLayout.setPrefWidth(450);  // Increased width for overall layout
+        addTaskLayout.setPrefWidth(450);
 
         return addTaskLayout;
     }
-
-
-
 
 
     private void updateColumns() {
