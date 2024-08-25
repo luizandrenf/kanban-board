@@ -4,21 +4,22 @@ import jakarta.persistence.*;
 import org.example.domain.application.repositories.TaskRepository;
 import org.example.domain.enterprise.entities.Task;
 import org.example.domain.enterprise.entities.User;
+import org.example.domain.enterprise.enums.Status;
 
 import java.util.List;
+import java.util.Optional;
 
 public class HibernateTaskRepository implements TaskRepository {
 
     private EntityManagerFactory entityManagerFactory;
-    private EntityManager entityManager;
 
     public HibernateTaskRepository(){
         this.entityManagerFactory = Persistence.createEntityManagerFactory("todoListPU");
-        this.entityManager = entityManagerFactory.createEntityManager();
     }
 
     @Override
     public void create(Task task) {
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -31,17 +32,16 @@ public class HibernateTaskRepository implements TaskRepository {
 
         } finally {
             entityManager.close();
-            entityManagerFactory.close();
         }
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void update(Task task){
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            Task task = entityManager.find(Task.class, id);
-            entityManager.remove(task);
+            entityManager.merge(task);
             transaction.commit();
 
         } catch (Exception e) {
@@ -50,35 +50,80 @@ public class HibernateTaskRepository implements TaskRepository {
 
         } finally {
             entityManager.close();
-            entityManagerFactory.close();
+
         }
     }
 
     @Override
-    public Task findById(Long id) {
+    public void deleteById(Long id) {
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Task task = entityManager.find(Task.class, id);
+
+            if (task != null) {
+                entityManager.remove(task);
+            }
+            transaction.commit();
+
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException(e);
+
+        } finally {
+            entityManager.close();
+
+        }
+    }
+
+    @Override
+    public Optional<Task> findById(Long id) {
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
         try {
             Task task = entityManager.find(Task.class, id);
-            return task;
+            return Optional.ofNullable(task);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
 
         } finally {
             entityManager.close();
-            entityManagerFactory.close();
+
+        }
+    }
+
+    @Override
+    public Optional<Task> findByTitle(String title){
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+        try {
+            TypedQuery<Task> query = entityManager.createQuery("select t from Task where t.title = :title", Task.class);
+
+            query.setParameter("title", title);
+
+            Task task = query.getSingleResult();
+
+            return Optional.of(task);
+        } catch (Exception e) {
+            return Optional.empty();
+
+        } finally {
+            entityManager.close();
+
         }
     }
 
     @Override
     public List<Task> findManyByUser(User user) {
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
         try {
-            Query query = entityManager.createQuery("select t from Task t where t.user = :userParam");
+            TypedQuery<Task> query = entityManager.createQuery("select t from Task t where t.user = :userParam", Task.class);
 
             query.setParameter("userParam", user);
 
             List<Task> taskList =  query.getResultList();
 
-            return  taskList;
+            return taskList;
 
         } catch (Exception e){
             throw new RuntimeException(e);
@@ -86,7 +131,28 @@ public class HibernateTaskRepository implements TaskRepository {
         } finally {
 
             entityManager.close();
-            entityManagerFactory.close();
+        }
+    }
+
+    @Override
+    public List<Task> findManyByStatusAndUser(Status status, User user) {
+        EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+        try {
+            TypedQuery<Task> query = entityManager.createQuery("select t from Task t where t.user = :userParam and t.status = :paramStatus", Task.class);
+
+            query.setParameter("userParam", user);
+            query.setParameter("paramStatus", status);
+
+            List<Task> taskList =  query.getResultList();
+
+            return taskList;
+
+        } catch (Exception e){
+            throw new RuntimeException(e);
+
+        } finally {
+
+            entityManager.close();
         }
     }
 }

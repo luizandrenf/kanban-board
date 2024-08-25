@@ -1,7 +1,7 @@
 package org.example.domain.enterprise.entities;
 
 import jakarta.persistence.*;
-import org.example.domain.enterprise.enums.Priority;
+import org.example.domain.enterprise.enums.Status;
 
 import java.time.LocalDate;
 
@@ -15,11 +15,9 @@ public abstract class Task {
 
     protected String title;
     protected String description;
-    protected LocalDate limitDate;
-    protected Boolean finished;
 
     @Enumerated(EnumType.STRING)
-    protected Priority priority;
+    protected Status status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -27,12 +25,10 @@ public abstract class Task {
 
     public Task(){}
 
-    public Task(String title, String description, LocalDate limitDate, Boolean finished, Priority priority, User user) {
+    public Task(String title, String description, Status status, User user) {
         this.title = title;
         this.description = description;
-        this.limitDate = limitDate;
-        this.finished = finished;
-        this.priority = priority;
+        this.status = status;
         this.user = user;
     }
 
@@ -52,22 +48,6 @@ public abstract class Task {
         this.description = description;
     }
 
-    public LocalDate getLimitDate() {
-        return limitDate;
-    }
-
-    public void setLimitDate(LocalDate limitDate) {
-        this.limitDate = limitDate;
-    }
-
-    public Boolean getFinished() {
-        return finished;
-    }
-
-    public void setFinished(Boolean finished) {
-        this.finished = finished;
-    }
-
     public Long getId() {
         return id;
     }
@@ -76,12 +56,12 @@ public abstract class Task {
         this.id = id;
     }
 
-    public Priority getPriority() {
-        return priority;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setPriority(Priority priority) {
-        this.priority = priority;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public User getUser() {

@@ -1,30 +1,18 @@
 package org.example;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import org.example.domain.enterprise.entities.User;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import org.example.infra.screens.SignInView;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        SignInView loginView = new SignInView();
+        loginView.start(primaryStage);  // Inicia a aplicação pela tela de login
+    }
+
     public static void main(String[] args) {
-
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("todoListPU");
-
-        EntityManager entityManager = emf.createEntityManager();
-
-        entityManager.getTransaction().begin();
-
-        User user = new User("Luiz", "luizandrenf", "123456");
-
-        entityManager.persist(user);
-
-        entityManager.getTransaction().commit();
-
-        entityManager.close();
-        emf.close();
-
-
+        launch(args);  // Lança a aplicação JavaFX
     }
 }
