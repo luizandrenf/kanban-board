@@ -11,6 +11,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.example.domain.application.services.TaskService;
 import org.example.domain.enterprise.entities.Task;
@@ -125,11 +127,38 @@ public class KanbanBoardView extends Application {
     }
 
     private VBox createAddTaskLayout() {
+        // Labels
+        Label titleLabel = new Label("Title:");
+        Label descriptionLabel = new Label("Description:");
+        Label placeOrDepartmentLabel = new Label("Place/Department:");
+        Label typeLabel = new Label("Type:");
+
+        // Inputs
         TextField titleInput = new TextField();
         TextField descriptionInput = new TextField();
         TextField placeOrDepartmentInput = new TextField();
         ComboBox<String> typeComboBox = new ComboBox<>(FXCollections.observableArrayList("Work", "Personal"));
+
+        // Styling inputs and labels
+        titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        descriptionLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        placeOrDepartmentLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        typeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+
+        titleInput.setPromptText("Enter task title");
+        descriptionInput.setPromptText("Enter task description");
+        placeOrDepartmentInput.setPromptText("Enter place or department");
+        typeComboBox.setPromptText("Select task type");
+
+        // Adjust sizes
+        titleInput.setPrefWidth(400);  // Increased width
+        descriptionInput.setPrefWidth(400);  // Increased width
+        placeOrDepartmentInput.setPrefWidth(400);  // Increased width
+        typeComboBox.setPrefWidth(400);  // Increased width
+
+        // Button
         Button addButton = new Button("Add Task");
+        addButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-font-size: 14px;");
 
         addButton.setOnAction(e -> {
             String title = titleInput.getText();
@@ -164,19 +193,33 @@ public class KanbanBoardView extends Application {
             updateColumns();
         });
 
-        VBox addTaskLayout = new VBox(10,
-                new Label("Title:"), titleInput,
-                new Label("Description:"), descriptionInput,
-                new Label("Place/Department:"), placeOrDepartmentInput,
-                new Label("Type:"), typeComboBox,
-                addButton
-        );
-        addTaskLayout.setPadding(new Insets(10));
-        addTaskLayout.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: #e0f7fa; -fx-border-radius: 5; -fx-background-radius: 5;");
-        addTaskLayout.setPrefWidth(300);
+        // Layout
+        GridPane formLayout = new GridPane();
+        formLayout.setHgap(10);
+        formLayout.setVgap(10);
+        formLayout.setPadding(new Insets(15));
+
+        formLayout.add(titleLabel, 0, 0);
+        formLayout.add(titleInput, 1, 0);
+        formLayout.add(descriptionLabel, 0, 1);
+        formLayout.add(descriptionInput, 1, 1);
+        formLayout.add(placeOrDepartmentLabel, 0, 2);
+        formLayout.add(placeOrDepartmentInput, 1, 2);
+        formLayout.add(typeLabel, 0, 3);
+        formLayout.add(typeComboBox, 1, 3);
+        formLayout.add(addButton, 1, 4);
+
+        VBox addTaskLayout = new VBox(15, formLayout);
+        addTaskLayout.setPadding(new Insets(20));
+        addTaskLayout.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-background-color: #e3f2fd; -fx-border-radius: 5; -fx-background-radius: 5;");
+        addTaskLayout.setPrefWidth(450);  // Increased width for overall layout
 
         return addTaskLayout;
     }
+
+
+
+
 
     private void updateColumns() {
         toDoColumn.getChildren().setAll(createColumn("To Do").getChildren());
@@ -225,9 +268,10 @@ public class KanbanBoardView extends Application {
     }
 
     private void showTaskDetails(Task task) {
-        Alert taskDetailsAlert = new Alert(Alert.AlertType.INFORMATION);
-        taskDetailsAlert.setTitle("Task Details");
-        taskDetailsAlert.setHeaderText(task.getTitle());
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Task Details");
+        dialog.setHeaderText(task.getTitle());
+
         String details = "Description: " + task.getDescription() + "\n" +
                 "Status: " + task.getStatus() + "\n";
 
@@ -237,9 +281,25 @@ public class KanbanBoardView extends Application {
             details += "Place: " + ((PersonalTask) task).getPlace();
         }
 
-        taskDetailsAlert.setContentText(details);
-        taskDetailsAlert.showAndWait();
+        Label contentLabel = new Label(details);
+        dialog.getDialogPane().setContent(contentLabel);
+
+        ButtonType deleteButtonType = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(deleteButtonType, cancelButtonType);
+
+        // Apply red style to the delete button
+        Button deleteButton = (Button) dialog.getDialogPane().lookupButton(deleteButtonType);
+        deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
+
+        // Show the dialog and wait for a response
+        Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && result.get() == deleteButtonType) {
+            taskService.delete(task.getId());
+            updateColumns();
+        }
     }
+
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
