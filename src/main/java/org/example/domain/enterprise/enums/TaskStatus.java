@@ -1,6 +1,6 @@
 package org.example.domain.enterprise.enums;
 
-public enum Status {
+public enum TaskStatus {
     TODO,
     DOING,
     DONE

@@ -4,7 +4,7 @@ import org.example.domain.application.repositories.TaskRepository;
 import org.example.domain.application.repositories.UserRepository;
 import org.example.domain.enterprise.entities.Task;
 import org.example.domain.enterprise.entities.User;
-import org.example.domain.enterprise.enums.Status;
+import org.example.domain.enterprise.enums.TaskStatus;
 import org.example.infra.DB.repositories.HibernateTaskRepository;
 import org.example.infra.DB.repositories.HibernateUserRepository;
 
@@ -19,7 +19,7 @@ public class TestandoFindByUsername {
 
         TaskRepository taskRepository = new HibernateTaskRepository();
 
-        List<Task> tasks = taskRepository.findManyByStatusAndUser(Status.TODO, user.get());
+        List<Task> tasks = taskRepository.findManyByStatusAndUser(TaskStatus.TODO, user.get());
 
         for (Task task: tasks){
             System.out.println("Title: " + task.getTitle());

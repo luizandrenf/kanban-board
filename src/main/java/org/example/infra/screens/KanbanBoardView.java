@@ -19,7 +19,7 @@ import org.example.domain.enterprise.entities.Task;
 import org.example.domain.enterprise.entities.WorkTask;
 import org.example.domain.enterprise.entities.PersonalTask;
 import org.example.domain.enterprise.entities.User;
-import org.example.domain.enterprise.enums.Status;
+import org.example.domain.enterprise.enums.TaskStatus;
 
 import java.util.Optional;
 
@@ -112,7 +112,7 @@ public class KanbanBoardView extends Application {
                 Optional<Task> taskOptional = taskService.findById(Long.parseLong(taskId));
                 if (taskOptional.isPresent()) {
                     Task task = taskOptional.get();
-                    Status newStatus = getColumnStatus(column);
+                    TaskStatus newStatus = getColumnStatus(column);
                     task.setStatus(newStatus);
                     taskService.update(task);
                     updateColumns();
@@ -181,7 +181,7 @@ public class KanbanBoardView extends Application {
             }
             newTask.setTitle(title);
             newTask.setDescription(description);
-            newTask.setStatus(Status.TODO);
+            newTask.setStatus(TaskStatus.TODO);
             newTask.setUser(currentUser);
             taskService.addTask(newTask);
 
@@ -223,12 +223,12 @@ public class KanbanBoardView extends Application {
         doingColumn.getChildren().setAll(createColumn("Doing").getChildren());
         doneColumn.getChildren().setAll(createColumn("Done").getChildren());
 
-        addTasksToColumn(toDoColumn, Status.TODO);
-        addTasksToColumn(doingColumn, Status.DOING);
-        addTasksToColumn(doneColumn, Status.DONE);
+        addTasksToColumn(toDoColumn, TaskStatus.TODO);
+        addTasksToColumn(doingColumn, TaskStatus.DOING);
+        addTasksToColumn(doneColumn, TaskStatus.DONE);
     }
 
-    private void addTasksToColumn(VBox column, Status status) {
+    private void addTasksToColumn(VBox column, TaskStatus status) {
         ObservableList<Task> tasks = FXCollections.observableArrayList(taskService.findManyByStatusAndUser(status.name(), currentUser));
         for (Task task : tasks) {
             Label taskLabel = new Label(task.getTitle());
@@ -250,15 +250,15 @@ public class KanbanBoardView extends Application {
         }
     }
 
-    private Status getColumnStatus(VBox column) {
+    private TaskStatus getColumnStatus(VBox column) {
         Label label = (Label) column.getChildren().get(0);
         switch (label.getText()) {
             case "To Do":
-                return Status.TODO;
+                return TaskStatus.TODO;
             case "Doing":
-                return Status.DOING;
+                return TaskStatus.DOING;
             case "Done":
-                return Status.DONE;
+                return TaskStatus.DONE;
             default:
                 return null;
         }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.example.domain.application.repositories.TaskRepository;
 import org.example.domain.enterprise.entities.Task;
 import org.example.domain.enterprise.entities.User;
-import org.example.domain.enterprise.enums.Status;
+import org.example.domain.enterprise.enums.TaskStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -135,7 +135,7 @@ public class HibernateTaskRepository implements TaskRepository {
     }
 
     @Override
-    public List<Task> findManyByStatusAndUser(Status status, User user) {
+    public List<Task> findManyByStatusAndUser(TaskStatus status, User user) {
         EntityManager entityManager = this.entityManagerFactory.createEntityManager();
         try {
             TypedQuery<Task> query = entityManager.createQuery("select t from Task t where t.user = :userParam and t.status = :paramStatus", Task.class);

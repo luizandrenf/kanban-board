@@ -3,9 +3,7 @@ package org.example.domain.enterprise.entities;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-import org.example.domain.enterprise.enums.Status;
-
-import java.time.LocalDate;
+import org.example.domain.enterprise.enums.TaskStatus;
 
 @Entity
 @Table(name = "personal_tasks")
@@ -16,7 +14,7 @@ public class PersonalTask extends Task {
 
     public PersonalTask(){}
 
-    public PersonalTask(String title, String description, Status status, String place, User user) {
+    public PersonalTask(String title, String description, TaskStatus status, String place, User user) {
         super(title, description, status, user);
         this.place = place;
     }

@@ -1,9 +1,7 @@
 package org.example.domain.enterprise.entities;
 
 import jakarta.persistence.*;
-import org.example.domain.enterprise.enums.Status;
-
-import java.time.LocalDate;
+import org.example.domain.enterprise.enums.TaskStatus;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -17,7 +15,7 @@ public abstract class Task {
     protected String description;
 
     @Enumerated(EnumType.STRING)
-    protected Status status;
+    protected TaskStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -25,7 +23,7 @@ public abstract class Task {
 
     public Task(){}
 
-    public Task(String title, String description, Status status, User user) {
+    public Task(String title, String description, TaskStatus status, User user) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -56,11 +54,11 @@ public abstract class Task {
         this.id = id;
     }
 
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 

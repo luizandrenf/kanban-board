@@ -2,7 +2,7 @@ package org.example.domain.application.repositories;
 
 import org.example.domain.enterprise.entities.Task;
 import org.example.domain.enterprise.entities.User;
-import org.example.domain.enterprise.enums.Status;
+import org.example.domain.enterprise.enums.TaskStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +14,5 @@ public interface TaskRepository {
     Optional<Task> findById(Long id);
     Optional<Task> findByTitle(String title);
     List<Task> findManyByUser(User user);
-    List<Task> findManyByStatusAndUser(Status status, User user);
+    List<Task> findManyByStatusAndUser(TaskStatus status, User user);
 }
