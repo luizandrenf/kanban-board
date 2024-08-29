@@ -45,23 +45,18 @@ public class KanbanBoardView extends Application {
         doingColumn = createColumn("Doing");
         doneColumn = createColumn("Done");
 
-        // Layout for Kanban columns
         HBox kanbanLayout = new HBox(10, toDoColumn, doingColumn, doneColumn);
         kanbanLayout.setPadding(new Insets(10));
 
-        // Center the Kanban board
         kanbanLayout.setAlignment(Pos.CENTER);
 
-        // Use BorderPane for layout
         BorderPane mainLayout = new BorderPane();
         mainLayout.setPadding(new Insets(10));
         mainLayout.setCenter(kanbanLayout);
 
-        // Layout for adding tasks
         VBox addTaskLayout = createAddTaskLayout();
         mainLayout.setTop(addTaskLayout);
 
-        // Update columns with tasks
         updateColumns();
 
         Scene scene = new Scene(mainLayout, 1200, 600);
@@ -74,7 +69,6 @@ public class KanbanBoardView extends Application {
         column.setPadding(new Insets(10));
         column.setStyle("-fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5;");
 
-        //
         switch (title) {
             case "To Do":
                 column.setStyle(column.getStyle() + "-fx-background-color: #f8d7da;"); // Color for "To Do"
@@ -96,7 +90,6 @@ public class KanbanBoardView extends Application {
         label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         column.getChildren().add(label);
 
-        // Enable drop for columns
         column.setOnDragOver(event -> {
             if (event.getGestureSource() != column && event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.MOVE);
@@ -127,19 +120,16 @@ public class KanbanBoardView extends Application {
     }
 
     private VBox createAddTaskLayout() {
-        // Labels
         Label titleLabel = new Label("Title:");
         Label descriptionLabel = new Label("Description:");
         Label placeOrDepartmentLabel = new Label("Place/Department:");
         Label typeLabel = new Label("Type:");
 
-        // Inputs
         TextField titleInput = new TextField();
         TextField descriptionInput = new TextField();
         TextField placeOrDepartmentInput = new TextField();
         ComboBox<String> typeComboBox = new ComboBox<>(FXCollections.observableArrayList("Work", "Personal"));
 
-        // Styling inputs and labels
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         descriptionLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         placeOrDepartmentLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -150,13 +140,11 @@ public class KanbanBoardView extends Application {
         placeOrDepartmentInput.setPromptText("Enter place or department");
         typeComboBox.setPromptText("Select task type");
 
-        // Adjust sizes
         titleInput.setPrefWidth(400);
         descriptionInput.setPrefWidth(400);
         placeOrDepartmentInput.setPrefWidth(400);
         typeComboBox.setPrefWidth(400);
 
-        // Button
         Button addButton = new Button("Add Task");
         addButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10; -fx-font-size: 14px;");
 
@@ -193,7 +181,7 @@ public class KanbanBoardView extends Application {
             updateColumns();
         });
 
-        // Layout
+
         GridPane formLayout = new GridPane();
         formLayout.setHgap(10);
         formLayout.setVgap(10);
@@ -234,7 +222,6 @@ public class KanbanBoardView extends Application {
             Label taskLabel = new Label(task.getTitle());
             taskLabel.setStyle("-fx-border-color: gray; -fx-border-width: 1; -fx-padding: 5; -fx-cursor: hand;");
 
-            // Drag event
             taskLabel.setOnDragDetected(e -> {
                 Dragboard db = taskLabel.startDragAndDrop(TransferMode.MOVE);
                 ClipboardContent content = new ClipboardContent();
@@ -243,7 +230,6 @@ public class KanbanBoardView extends Application {
                 e.consume();
             });
 
-            // Click event to show task details
             taskLabel.setOnMouseClicked(e -> showTaskDetails(task));
 
             column.getChildren().add(taskLabel);
@@ -285,11 +271,9 @@ public class KanbanBoardView extends Application {
         ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(deleteButtonType, cancelButtonType);
 
-        // Apply red style to the delete button
         Button deleteButton = (Button) dialog.getDialogPane().lookupButton(deleteButtonType);
         deleteButton.setStyle("-fx-background-color: red; -fx-text-fill: white;");
 
-        // Show the dialog and wait for a response
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == deleteButtonType) {
             taskService.delete(task.getId());
